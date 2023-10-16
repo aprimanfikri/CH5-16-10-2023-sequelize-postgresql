@@ -38,15 +38,15 @@ const register = async (req, res, next) => {
       name,
       address,
       age,
+      shopId: req.user.shopId,
     });
-    const test = await Auth.create({
+
+    await Auth.create({
       email,
       password: hashedPassword,
       confirmPassword: hashedConfirmPassword,
       userId: newUser.id,
     });
-
-    console.log(test);
 
     res.status(201).json({
       status: "Success",
@@ -98,7 +98,20 @@ const login = async (req, res, next) => {
   }
 };
 
+const authenticate = async (req, res, next) => {
+  try {
+    res.status(200).json({
+      status: "Success",
+      message: "Success get user data",
+      data: req.user,
+    });
+  } catch (error) {
+    next(new ApiError(err.message, 500));
+  }
+};
+
 module.exports = {
   register,
   login,
+  authenticate,
 };
